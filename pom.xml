@@ -12,7 +12,7 @@
     <artifactId>springboot-wxcloudrun</artifactId>
     <version>1.1</version>
     <name>springboot-wxcloudrun</name>
-    <description>first_push</description>
+    <description>datasource</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
