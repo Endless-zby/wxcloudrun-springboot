@@ -6,8 +6,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://10.15.103.98:3306/byzhao
-    username: root
-    password: @Zby123456
+    username: "root"
+    password: "@Zby123456"
   mvc:
     view:
       suffix: .html
