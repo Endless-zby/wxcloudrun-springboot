@@ -1,5 +1,6 @@
 package com.tencent.wxcloudrun.controller;
 
+import com.tencent.wxcloudrun.config.ApiResponse;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.util.StringUtils;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -21,7 +22,7 @@ public class WxMessageController {
     final Logger logger = LoggerFactory.getLogger(WxMessageController.class);
 
     @GetMapping(value = "/sendMessage")
-    public void sendMessage(HttpServletRequest request, HttpServletResponse response, @RequestBody WxMpXmlMessage wxMpXmlMessage) {
+    public ApiResponse sendMessage(HttpServletRequest request, HttpServletResponse response, @RequestBody WxMpXmlMessage wxMpXmlMessage) {
         String wxSource = request.getHeader("x-wx-source");
         if(StringUtils.isBlank(wxSource)){
             logger.info("WxMessageController.sendMessage this message not from Wechat, attention please !!!");
@@ -50,6 +51,7 @@ public class WxMessageController {
             // 新闻消息处理
             logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_NEWS, wxMpXmlMessage);
         }
+        return ApiResponse.ok();
     }
 
 }
