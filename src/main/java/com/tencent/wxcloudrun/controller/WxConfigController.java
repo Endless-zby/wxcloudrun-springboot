@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@RestController("/wx")
+@RestController("/wx/config")
 public class WxConfigController {
 
     final Logger logger = LoggerFactory.getLogger(WxConfigController.class);
