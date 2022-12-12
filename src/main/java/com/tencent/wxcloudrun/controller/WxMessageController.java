@@ -9,6 +9,7 @@ import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,7 @@ public class WxMessageController {
 
     final Logger logger = LoggerFactory.getLogger(WxMessageController.class);
 
-    @GetMapping(value = "/sendMessage")
+    @PostMapping(value = "/sendMessage")
     public ApiResponse sendMessage(HttpServletRequest request, HttpServletResponse response, @RequestBody WxMpXmlMessage wxMpXmlMessage) {
         String wxSource = request.getHeader("x-wx-source");
         if(StringUtils.isBlank(wxSource)){
