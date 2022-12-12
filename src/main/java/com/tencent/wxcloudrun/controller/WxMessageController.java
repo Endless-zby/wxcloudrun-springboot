@@ -28,26 +28,28 @@ public class WxMessageController {
         }
         if(WxConsts.XML_MSG_TEXT.equals(wxMpXmlMessage.getMsgType())){
             // 文本消息处理
+            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_TEXT, wxMpXmlMessage);
         }
         if(WxConsts.XML_MSG_EVENT.equals(wxMpXmlMessage.getMsgType())){
             // 事件消息处理
+            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_EVENT, wxMpXmlMessage);
         }
         if(WxConsts.XML_MSG_LINK.equals(wxMpXmlMessage.getMsgType())){
             // 链接消息处理
+            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_LINK, wxMpXmlMessage);
         }
         if(WxConsts.XML_MSG_IMAGE.equals(wxMpXmlMessage.getMsgType())){
             // 图片消息处理
+            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_IMAGE, wxMpXmlMessage);
         }
         if(WxConsts.XML_MSG_VIDEO.equals(wxMpXmlMessage.getMsgType())){
             // 视频消息处理
+            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_VIDEO, wxMpXmlMessage);
         }
-
-        WxMpService wxMpService = new WxMpServiceImpl();
-        wxMpService
-
-
-
-
+        if(WxConsts.XML_MSG_NEWS.equals(wxMpXmlMessage.getMsgType())){
+            // 新闻消息处理
+            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_NEWS, wxMpXmlMessage);
+        }
     }
 
 }
