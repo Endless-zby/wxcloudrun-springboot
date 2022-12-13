@@ -40,10 +40,11 @@ public class WxMessageController {
             if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
                 throw new IllegalArgumentException("非法请求，可能属于伪造的请求！");
             }
-
         }
+
         // 解析消息体，封装为对象
         WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(requestBody);
+        logger.info("WxMpXmlMessage : {}", inMessage.toString());
         WxMpXmlOutMessage outMessage;
         try {
             // 将消息路由给对应的处理器，获取响应

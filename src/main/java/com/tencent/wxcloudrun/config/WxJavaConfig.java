@@ -27,7 +27,7 @@ public class WxJavaConfig {
         final WxMpMessageRouter router = new WxMpMessageRouter(wxMpService);
         // 添加文本消息路由
         router.rule().async(false).msgType(WxConsts.XmlMsgType.TEXT).handler(textHandler).end();
-        router.rule().async(false).msgType(WxConsts.XmlMsgType.IMAGE).handler(textHandler, imageHandler).end();
+        router.rule().async(false).msgType(WxConsts.XmlMsgType.IMAGE).handler(imageHandler).end();
         return router;
     }
 
