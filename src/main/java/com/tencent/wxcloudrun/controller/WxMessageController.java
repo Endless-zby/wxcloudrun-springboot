@@ -1,15 +1,15 @@
 package com.tencent.wxcloudrun.controller;
 
-import com.tencent.wxcloudrun.config.ApiResponse;
-import me.chanjar.weixin.common.api.WxConsts;
-import me.chanjar.weixin.common.util.StringUtils;
-import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
+import me.chanjar.weixin.mp.api.WxMpMessageRouter;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
+import me.chanjar.weixin.mp.config.WxMpConfigStorage;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,39 +18,43 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "/wx/message")
 public class WxMessageController {
 
+    @Autowired
+    private WxMpService wxMpService;
+    @Autowired
+    private WxMpMessageRouter wxMpMessageRouter;
+    @Autowired
+    private WxMpConfigStorage wxMpConfigStorage;
+
     final Logger logger = LoggerFactory.getLogger(WxMessageController.class);
 
-    @PostMapping(value = "/sendMessage")
-    public ApiResponse sendMessage(HttpServletRequest request, HttpServletResponse response, @RequestBody WxMpXmlMessage wxMpXmlMessage) {
+    @PostMapping(value = "/sendMessage", produces = "application/xml; charset=UTF-8")
+    public String sendMessage(HttpServletRequest request,
+                              @RequestBody String requestBody,
+                              @RequestParam("signature") String signature,
+                              @RequestParam("timestamp") String timestamp,
+                              @RequestParam("nonce") String nonce) {
         String wxSource = request.getHeader("x-wx-source");
         if(StringUtils.isBlank(wxSource)){
+            // 非微信内网请求  需要进行校验
             logger.info("WxMessageController.sendMessage this message not from Wechat, attention please !!!");
+            if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
+                throw new IllegalArgumentException("非法请求，可能属于伪造的请求！");
+            }
+
         }
-        if(WxConsts.XML_MSG_TEXT.equals(wxMpXmlMessage.getMsgType())){
-            // 文本消息处理
-            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_TEXT, wxMpXmlMessage);
+        // 解析消息体，封装为对象
+        WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(requestBody);
+        WxMpXmlOutMessage outMessage;
+        try {
+            // 将消息路由给对应的处理器，获取响应
+            outMessage = wxMpMessageRouter.route(inMessage);
+        } catch (Exception e) {
+            logger.error("微信消息路由异常", e);
+            outMessage = null;
         }
-        if(WxConsts.XML_MSG_EVENT.equals(wxMpXmlMessage.getMsgType())){
-            // 事件消息处理
-            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_EVENT, wxMpXmlMessage);
-        }
-        if(WxConsts.XML_MSG_LINK.equals(wxMpXmlMessage.getMsgType())){
-            // 链接消息处理
-            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_LINK, wxMpXmlMessage);
-        }
-        if(WxConsts.XML_MSG_IMAGE.equals(wxMpXmlMessage.getMsgType())){
-            // 图片消息处理
-            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_IMAGE, wxMpXmlMessage);
-        }
-        if(WxConsts.XML_MSG_VIDEO.equals(wxMpXmlMessage.getMsgType())){
-            // 视频消息处理
-            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_VIDEO, wxMpXmlMessage);
-        }
-        if(WxConsts.XML_MSG_NEWS.equals(wxMpXmlMessage.getMsgType())){
-            // 新闻消息处理
-            logger.info("WxMessageController.sendMessage receive success type: [{}]    info: [{}]", WxConsts.XML_MSG_NEWS, wxMpXmlMessage);
-        }
-        return ApiResponse.ok();
+        // 将响应消息转换为xml格式返回
+        return outMessage == null ? "" : outMessage.toXml();
+
     }
 
 }

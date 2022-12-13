@@ -1,7 +1,6 @@
 server:
   port: 80
 
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,3 +15,9 @@ spring:
 
 mybatis:
   mapper-locations: classpath*:mapper/*Mapper.xml
+
+wx:
+  mp:
+    app-id: wx9c826245985a8c78
+    secret: 03d248ee5874f870ae9163264303e9fa
+    token: bnfi4kjsh5bdfji56oHO6H0jof3hoGhi # 配置消息回调地址接入公众号时需要的token

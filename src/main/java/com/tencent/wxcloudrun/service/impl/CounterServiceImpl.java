@@ -14,7 +14,7 @@ public class CounterServiceImpl implements CounterService {
 
   final CountersMapper countersMapper;
 
-  public CounterServiceImpl(@Autowired CountersMapper countersMapper) {
+  public CounterServiceImpl(CountersMapper countersMapper) {
     this.countersMapper = countersMapper;
   }
 
