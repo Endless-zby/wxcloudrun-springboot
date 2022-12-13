@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping(value = "/wx/message")
+@RequestMapping(value = "/wx/message", produces = "application/xml; charset=UTF-8")
 public class WxMessageController {
 
     @Autowired
@@ -30,9 +30,9 @@ public class WxMessageController {
     @PostMapping(value = "/sendMessage", produces = "application/xml; charset=UTF-8")
     public String sendMessage(HttpServletRequest request,
                               @RequestBody String requestBody,
-                              @RequestParam("signature") String signature,
-                              @RequestParam("timestamp") String timestamp,
-                              @RequestParam("nonce") String nonce) {
+                              @RequestParam(value = "signature", required = false) String signature,
+                              @RequestParam(value = "timestamp", required = false) String timestamp,
+                              @RequestParam(value = "nonce", required = false) String nonce) {
         String wxSource = request.getHeader("x-wx-source");
         if(StringUtils.isBlank(wxSource)){
             // 非微信内网请求  需要进行校验
